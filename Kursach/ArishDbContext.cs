@@ -8,8 +8,8 @@ namespace Kursach
     {
         public DbSet<User> Users { get; set; }
 
-        public ArishDbContext(DbContextOptions<ArishDbContext> options)
-            : base(options)
+        public ArishDbContext()
+            
         {
            
         }
@@ -26,7 +26,7 @@ namespace Kursach
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("DefaultConnection");
+            optionsBuilder.UseSqlServer("Server=DESKTOP-S92B9CN;Database=ArishTestDB;User Id=pups;Password=1234;TrustServerCertificate=True;");
         }
     }
 }
