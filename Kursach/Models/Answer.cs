@@ -7,5 +7,6 @@
 
         public int AnswerText { get; set; }
 
+        //Тип вопроса решает 
     }
 }
