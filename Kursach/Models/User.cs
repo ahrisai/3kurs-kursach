@@ -9,6 +9,8 @@
 
         public string UserPassword { get; set; }
 
+        public string UserAvatar { get; set; }
+
         public ICollection<Test>Tests { get; set; }
     }
 }

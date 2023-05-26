@@ -3,10 +3,12 @@
     public class Answer
     {
         public int Id { get; set; }
-        public int TestId { get; set; }
+        public int QuestionId { get; set; }
 
-        public int AnswerText { get; set; }
+        public string AnswerValue { get; set; }
 
-        //Тип вопроса решает 
+        public string RightValue{ get; set; }
+
+
     }
 }
