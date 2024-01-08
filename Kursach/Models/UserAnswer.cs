@@ -1,15 +1,18 @@
 ﻿namespace Kursach.Models
 {
-    public class Answer
+    public class UserAnswer
     {
         public int Id { get; set; }
-        public int QuestionId { get; set; }
-        public Question Question { get; set; }
-        public string AnswerValue { get; set; }
 
-        public string RightValue{ get; set; }
+        public int UserId { get; set; }
+
+        public int QuestionId { get; set; }
+
+        public  int AnswerId { get; set; }
+
         public string StudentValue { get; set; }
 
         
+
     }
 }

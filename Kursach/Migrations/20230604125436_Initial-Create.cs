@@ -1,30 +1,15 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Kursach.Migrations
 {
     /// <inheritdoc />
-    public partial class NewDatabase : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Groups",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AdminId = table.Column<int>(type: "int", nullable: false),
-                    GroupName = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Groups", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -34,17 +19,31 @@ namespace Kursach.Migrations
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserAvatar = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GroupId = table.Column<int>(type: "int", nullable: true)
+                    UserAvatar = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Groups",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GroupName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Groups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Groups_GroupId",
-                        column: x => x.GroupId,
-                        principalTable: "Groups",
-                        principalColumn: "Id");
+                        name: "FK_Groups_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -54,21 +53,15 @@ namespace Kursach.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TestTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EditMode = table.Column<bool>(type: "bit", nullable: false),
-                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DurationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    GroupId = table.Column<int>(type: "int", nullable: true)
+                    EditMode = table.Column<byte>(type: "tinyint", nullable: false),
+                    StartTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EndTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DurationTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tests", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tests_Groups_GroupId",
-                        column: x => x.GroupId,
-                        principalTable: "Groups",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Tests_Users_UserId",
                         column: x => x.UserId,
@@ -85,6 +78,8 @@ namespace Kursach.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     QuestionType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     QuestionText = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Worth = table.Column<int>(type: "int", nullable: false),
+                    Picture = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TestId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -99,6 +94,33 @@ namespace Kursach.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Results",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    TestId = table.Column<int>(type: "int", nullable: false),
+                    Mark = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Results", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Results_Tests_TestId",
+                        column: x => x.TestId,
+                        principalTable: "Tests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Results_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Answers",
                 columns: table => new
                 {
@@ -106,7 +128,8 @@ namespace Kursach.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     QuestionId = table.Column<int>(type: "int", nullable: false),
                     AnswerValue = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RightValue = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    RightValue = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StudentValue = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,24 +148,29 @@ namespace Kursach.Migrations
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Groups_UserId",
+                table: "Groups",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Questions_TestId",
                 table: "Questions",
                 column: "TestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tests_GroupId",
-                table: "Tests",
-                column: "GroupId");
+                name: "IX_Results_TestId",
+                table: "Results",
+                column: "TestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Results_UserId",
+                table: "Results",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tests_UserId",
                 table: "Tests",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_GroupId",
-                table: "Users",
-                column: "GroupId");
         }
 
         /// <inheritdoc />
@@ -152,6 +180,12 @@ namespace Kursach.Migrations
                 name: "Answers");
 
             migrationBuilder.DropTable(
+                name: "Groups");
+
+            migrationBuilder.DropTable(
+                name: "Results");
+
+            migrationBuilder.DropTable(
                 name: "Questions");
 
             migrationBuilder.DropTable(
@@ -159,9 +193,6 @@ namespace Kursach.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Groups");
         }
     }
 }

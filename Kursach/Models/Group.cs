@@ -4,12 +4,14 @@
     {
         public int Id { get; set; }
 
-        public int AdminId{ get; set; }
-
         public string GroupName { get; set; }
 
-        public ICollection<User>Members { get; set; }
+        public string GroupImg { get; set; }
+        public int UserId { get; set; }
+        public User User { get; set; }
 
-        public ICollection<Test>GroupTests { get; set; }
+       
+
+        
     }
 }

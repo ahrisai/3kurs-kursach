@@ -1,6 +1,8 @@
 ﻿using Kursach.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System;
 
 
 namespace Kursach.Controllers
@@ -49,5 +51,42 @@ namespace Kursach.Controllers
             
         }
 
+        [HttpPost("post")]
+        public async Task<ActionResult<User>> SetUser()
+        {
+            var reader = new StreamReader(Request.Body);
+
+            var rawMessage = await reader.ReadToEndAsync();
+
+            await Console.Out.WriteLineAsync(rawMessage);
+
+            User user= JsonConvert.DeserializeObject<User>(rawMessage);
+
+            await _dbContext.Users.AddAsync(user);
+           await _dbContext.SaveChangesAsync();
+            return Ok(user);
+        }
+        [HttpPut()]
+        public async Task<ActionResult<User>> PutGroup(int id)
+        {
+            var reader = new StreamReader(Request.Body);
+
+            var rawMessage = await reader.ReadToEndAsync();
+
+            await Console.Out.WriteLineAsync(rawMessage);
+
+            User user = JsonConvert.DeserializeObject<User>(rawMessage);
+
+          
+
+            _dbContext.Entry(user).State = EntityState.Modified;
+
+           
+                await _dbContext.SaveChangesAsync();
+            
+          
+
+            return Ok();
+        }
     } }
 
